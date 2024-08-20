@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { T, useThrelte } from '@threlte/core';
-	import { interactivity, Gizmo, OrbitControls } from '@threlte/extras';
+	import { interactivity, Gizmo, OrbitControls, Grid } from '@threlte/extras';
 	import Orbit from '$lib/components/Orbit.svelte';
 	import * as THREE from 'three';
 	import { onMount } from 'svelte';
@@ -64,7 +64,9 @@
 <Gizmo horizontalPlacement="left" paddingX={20} paddingY={20} />
 <T.DirectionalLight position.x={1} position.y={1} position.z={1} />
 <T.AmbientLight intensity={0.7} />
-<T.GridHelper args={[1.0, 10]} />
+<T.Mesh>
+	<Grid plane="xy" type="polar" />
+</T.Mesh>
 
 {#each $orbitList as orbit}
 	<Orbit {orbit} />
