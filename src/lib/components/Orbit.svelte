@@ -7,14 +7,7 @@
 	export let orbit: OrbitHandler;
 	import { get } from 'svelte/store';
 	import { drawRange } from '$lib/store';
-	let color: string = '#000000';
-	let lineWidth: number = 1;
-	orbit.color.subscribe((value) => {
-		color = value;
-	});
-	orbit.lineWidth.subscribe((value) => {
-		lineWidth = value;
-	});
+	let { lineWidth, color, visible } = orbit;
 </script>
 
 <T.Line>
@@ -30,5 +23,5 @@
 			}}
 		/>
 	</T.BufferGeometry>
-	<T.LineBasicMaterial {color} linewidth={lineWidth} />
+	<T.LineBasicMaterial visible={$visible} color={$color} linewidth={$lineWidth} />
 </T.Line>

@@ -5,6 +5,7 @@ export class OrbitHandler {
 	public positions: Float32Array;
 	public color: Writable<string> = writable('#ffffff');
 	public lineWidth: Writable<number> = writable(1);
+	public visible: Writable<boolean> = writable(true);
 	constructor(name: string, timesteps: { [string]: number }[], color: string) {
 		this.name.set(name);
 		this.color.set(color);
