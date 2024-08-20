@@ -1,81 +1,71 @@
 <script lang="ts">
-  import { T } from '@threlte/core'
-  import { ContactShadows, Float, Grid, OrbitControls } from '@threlte/extras'
+	import { T, useThrelte } from '@threlte/core';
+	import { interactivity, Gizmo, OrbitControls } from '@threlte/extras';
+	import Orbit from '$lib/components/Orbit.svelte';
+	import * as THREE from 'three';
+	import { onMount } from 'svelte';
+	import { orbitList } from '$lib/store';
+
+	export let cameraUpdate: (
+		event: Event & { detail: { newPosition: THREE.Vector3; newLookAt: THREE.Vector3 } }
+	) => void;
+
+	onMount(() => {
+		cameraUpdate = (event) => {
+			const { newPosition, newLookAt } = event.detail;
+			lookAt = { x: newLookAt.x, y: newLookAt.y, z: newLookAt.z };
+			position = newPosition.toArray();
+			orbitTarget = newLookAt.toArray();
+		};
+	});
+	interactivity();
+	export let autoRotate: boolean;
+	export let enableDamping: boolean;
+	export let rotateSpeed: number;
+	export let zoomToCursor: boolean;
+	export let zoomSpeed: number;
+	export let minPolarAngle: number;
+	export let maxPolarAngle: number;
+	export let enableZoom: boolean;
+	let position: [number, number, number] = [1, 0.5, 1];
+	let orbitTarget: [number, number, number] = [0, 0.0, 0];
+	let lookAt = { x: 0, y: 0.0, z: 0 };
+
+	let positions: Float32Array;
+
+	onMount(() => {
+		const numPoints = 1000;
+		const positionsArray = new Float32Array(numPoints * 3);
+		for (let i = 0; i < numPoints; i++) {
+			positionsArray[i * 3 + 0] = Math.random() - 0.5;
+			positionsArray[i * 3 + 1] = Math.random() - 0.5;
+			positionsArray[i * 3 + 2] = Math.random() - 0.5;
+		}
+		positions = positionsArray;
+	});
 </script>
 
-<T.PerspectiveCamera
-  makeDefault
-  position={[-10, 10, 10]}
-  fov={15}
->
-  <OrbitControls
-    autoRotate
-    enableZoom={false}
-    enableDamping
-    autoRotateSpeed={0.5}
-    target.y={1.5}
-  />
+<T.PerspectiveCamera makeDefault {position} bind:target={lookAt}></T.PerspectiveCamera>
+<T.PerspectiveCamera makeDefault {position} bind:target={lookAt}>
+	<OrbitControls
+		{enableDamping}
+		{autoRotate}
+		{rotateSpeed}
+		{zoomToCursor}
+		{zoomSpeed}
+		{minPolarAngle}
+		{maxPolarAngle}
+		{enableZoom}
+		bind:target={orbitTarget}
+		bind:cursor={orbitTarget}
+	/>
 </T.PerspectiveCamera>
 
-<T.DirectionalLight
-  intensity={0.8}
-  position.x={5}
-  position.y={10}
-/>
-<T.AmbientLight intensity={0.2} />
+<Gizmo horizontalPlacement="left" paddingX={20} paddingY={20} />
+<T.DirectionalLight position.x={1} position.y={1} position.z={1} />
+<T.AmbientLight intensity={0.7} />
+<T.GridHelper args={[1.0, 10]} />
 
-<Grid
-  position.y={-0.001}
-  cellColor="#ffffff"
-  sectionColor="#ffffff"
-  sectionThickness={0}
-  fadeDistance={25}
-  cellSize={2}
-/>
-
-<ContactShadows
-  scale={10}
-  blur={2}
-  far={2.5}
-  opacity={0.5}
-/>
-
-<Float
-  floatIntensity={1}
-  floatingRange={[0, 1]}
->
-  <T.Mesh
-    position.y={1.2}
-    position.z={-0.75}
-  >
-    <T.BoxGeometry />
-    <T.MeshStandardMaterial color="#0059BA" />
-  </T.Mesh>
-</Float>
-
-<Float
-  floatIntensity={1}
-  floatingRange={[0, 1]}
->
-  <T.Mesh
-    position={[1.2, 1.5, 0.75]}
-    rotation.x={5}
-    rotation.y={71}
-  >
-    <T.TorusKnotGeometry args={[0.5, 0.15, 100, 12, 2, 3]} />
-    <T.MeshStandardMaterial color="#F85122" />
-  </T.Mesh>
-</Float>
-
-<Float
-  floatIntensity={1}
-  floatingRange={[0, 1]}
->
-  <T.Mesh
-    position={[-1.4, 1.5, 0.75]}
-    rotation={[-5, 128, 10]}
-  >
-    <T.IcosahedronGeometry />
-    <T.MeshStandardMaterial color="#F8EBCE" />
-  </T.Mesh>
-</Float>
+{#each $orbitList as orbit}
+	<Orbit {orbit} />
+{/each}
