@@ -1,13 +1,19 @@
 <script lang="ts">
+	import SceneParameters from '$lib/components/SceneParameters.svelte';
+
 	import { Canvas } from '@threlte/core';
 	import Scene from '$lib/components/Scene.svelte';
 	import * as THREE from 'three';
 	import { onMount } from 'svelte';
 	import PapaParse from 'papaparse';
 	import { OrbitHandler } from '$lib/OrbitHandler';
-	import OrbitSettings from '$lib/components/OrbitSettings.svelte';
-	import { orbitList, numSteps, drawRange } from '$lib/store';
-	import { Pane, IntervalSlider, Slider } from 'svelte-tweakpane-ui';
+	import {
+		orbitList,
+		numSteps,
+		drawRange,
+		solarGrowthFunction,
+		solarGrowthFinalMass
+	} from '$lib/store';
 	let autoRotate: boolean = false;
 	let enableDamping: boolean = true;
 	let rotateSpeed: number = 1;
@@ -47,31 +53,37 @@
 		'#b15928'
 	];
 
-	onMount(() => {
-		PapaParse.parse('/orbits_linear_0100.csv', {
-			download: true,
-			dynamicTyping: true,
-			header: true,
-			complete: (results) => {
-				console.log(results.data);
-				const newOrbits = [];
-				for (const [index, body] of orbitingBodies.entries()) {
-					newOrbits.push(new OrbitHandler(body, results.data, pairedTenPalette[index]));
+	$: {
+		if ($solarGrowthFunction && $solarGrowthFinalMass) {
+			const funcName = $solarGrowthFunction;
+			const finalMass = $solarGrowthFinalMass;
+
+			const fileName = `/orbits_${funcName}_${finalMass.toString().padStart(4, '0')}.csv`;
+			PapaParse.parse(fileName, {
+				download: true,
+				dynamicTyping: true,
+				header: true,
+				complete: (results) => {
+					console.log(results.data);
+					const newOrbits = [];
+					for (const [index, body] of orbitingBodies.entries()) {
+						newOrbits.push(new OrbitHandler(body, results.data, pairedTenPalette[index]));
+					}
+					orbitList.set(newOrbits);
+					$numSteps = results.data.length;
+					$drawRange = [0, $numSteps];
 				}
-				orbitList.set(newOrbits);
-				$numSteps = results.data.length;
-				$drawRange = [0, $numSteps];
-			}
-		});
+			});
+		}
+	}
+
+	onMount(() => {
+		$solarGrowthFunction = 'linear';
+		$solarGrowthFinalMass = 100;
 	});
 </script>
 
-<Pane title="Parameters" position="fixed">
-	<IntervalSlider bind:value={$drawRange} min={0} max={$numSteps} step={1} />
-	{#each $orbitList as orbit}
-		<OrbitSettings {orbit} />
-	{/each}
-</Pane>
+<SceneParameters />
 
 <div class="w-full h-dvh">
 	<Canvas>
