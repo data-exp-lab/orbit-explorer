@@ -9,8 +9,8 @@
 	} from '$lib/store';
 	import OrbitSettings from './OrbitSettings.svelte';
 
-	const masses: ListOptions<number> = [2, 5, 10, 25, 50, 100];
-	const functions: ListOptions<string> = ['linear', 'exponential'];
+	const masses: ListOptions<number> = [0.1, 1, 2, 5, 10, 25, 50];
+	const functions: ListOptions<string> = ['linear', 'exponential', 'instantaneous'];
 </script>
 
 <Pane title="Parameters" position="fixed">

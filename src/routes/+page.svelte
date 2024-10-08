@@ -58,7 +58,7 @@
 			const funcName = $solarGrowthFunction;
 			const finalMass = $solarGrowthFinalMass;
 
-			const fileName = `/orbits_${funcName}_${finalMass.toString().padStart(4, '0')}.csv`;
+			const fileName = `/orbits_${funcName}_${(finalMass * 100).toString().padStart(6, '0')}.csv`;
 			PapaParse.parse(fileName, {
 				download: true,
 				dynamicTyping: true,
@@ -79,7 +79,7 @@
 
 	onMount(() => {
 		$solarGrowthFunction = 'linear';
-		$solarGrowthFinalMass = 100;
+		$solarGrowthFinalMass = 1;
 	});
 </script>
 
