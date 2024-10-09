@@ -6,3 +6,4 @@ export const orbitList = writable<OrbitHandler[]>([]);
 export const numSteps = writable<number>(0);
 export const solarGrowthFunction = writable<string>();
 export const solarGrowthFinalMass = writable<number>();
+export const currentOrbitHover = writable<string>('none');

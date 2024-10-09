@@ -5,6 +5,7 @@
 	import * as THREE from 'three';
 	import { onMount } from 'svelte';
 	import { orbitList } from '$lib/store';
+	import BodySphere from './BodySphere.svelte';
 
 	export let cameraUpdate: (
 		event: Event & { detail: { newPosition: THREE.Vector3; newLookAt: THREE.Vector3 } }
@@ -70,4 +71,5 @@
 
 {#each $orbitList as orbit}
 	<Orbit {orbit} />
+	<BodySphere {orbit} />
 {/each}
