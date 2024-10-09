@@ -11,7 +11,7 @@
 </script>
 
 <T.Line>
-	<T.BufferGeometry drawRange={{ start: $drawRange[0], count: $drawRange[1] }}>
+	<T.BufferGeometry drawRange={{ start: $drawRange[0], count: $drawRange[1] - $drawRange[0] }}>
 		<T.BufferAttribute
 			args={[orbit.positions, 3]}
 			attach={(parent, self) => {

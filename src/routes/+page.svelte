@@ -76,11 +76,6 @@
 			});
 		}
 	}
-
-	onMount(() => {
-		$solarGrowthFunction = 'linear';
-		$solarGrowthFinalMass = 1;
-	});
 </script>
 
 <SceneParameters />
