@@ -1,11 +1,19 @@
 <script lang="ts">
-	import { Pane, IntervalSlider, List, type ListOptions, Folder } from 'svelte-tweakpane-ui';
+	import {
+		Pane,
+		IntervalSlider,
+		List,
+		type ListOptions,
+		Folder,
+		Monitor
+	} from 'svelte-tweakpane-ui';
 	import {
 		orbitList,
 		numSteps,
 		drawRange,
 		solarGrowthFunction,
-		solarGrowthFinalMass
+		solarGrowthFinalMass,
+		currentOrbitHover
 	} from '$lib/store';
 	import OrbitSettings from './OrbitSettings.svelte';
 	import { onMount } from 'svelte';
@@ -25,6 +33,7 @@
 
 <Pane title="Parameters" position="fixed">
 	<IntervalSlider bind:value={$drawRange} min={0} max={$numSteps} step={1} />
+	<Monitor label="Currently Hovered:" value={$currentOrbitHover} bufferSize={1} />
 	<List label="Solar Growth Function" bind:value={$solarGrowthFunction} options={functions} />
 	<List label="Solar Final Mass" bind:value={$solarGrowthFinalMass} options={masses} />
 	<Folder title="Info"></Folder>
