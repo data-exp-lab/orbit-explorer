@@ -28,7 +28,13 @@
 		{ text: '50x', value: 50.0 }
 	];
 
-	const functions: ListOptions<string> = ['linear', 'exponential', 'instantaneous'];
+	const functions: ListOptions<string> = [
+		'delayed_instant',
+		'delayed_fast',
+		'linear',
+		'exponential',
+		'instantaneous'
+	];
 </script>
 
 <Pane title="Parameters" position="fixed">

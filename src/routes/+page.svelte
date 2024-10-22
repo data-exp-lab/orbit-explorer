@@ -31,6 +31,7 @@
 		'Mercury',
 		'Venus',
 		'Earth',
+		'Luna',
 		'Mars',
 		'Jupiter',
 		'Saturn',
